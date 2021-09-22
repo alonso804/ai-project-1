@@ -6,8 +6,18 @@ def percentage(length, fraction):
 
 
 class MultivariateRegression:
-    def __init__(self):
-        pass
+    def __init__(self, dimensions, x, y, epoch, alpha):
+        self.dimensions = dimensions
+        self.x = x
+        self.y = y
+        self.epoch = epoch
+        self.alpha = alpha
+
+    def hypothesis(self, w, b, x):
+        h = np.dot(w, x)
+        h += b
+
+        return h
 
     def derivate(self):
         pass
@@ -16,6 +26,19 @@ class MultivariateRegression:
         pass
 
     def train(self):
+        w = [np.random.rand() for i in range(self.dimensions)]
+        b = np.random.rand()
+
+        err = self.error(w, b, self.x)
+
+        for i in range(self.epoch):
+            db, dw = self.derivative(w, b, self.x)
+
+            b, w = self.update(b, db, w, dw)
+
+            err = self.error(w, b, self.x)
+
+    def plotError(self, errorList):
         pass
 
 
