@@ -1,4 +1,46 @@
 import numpy as np
+import csv
+import matplotlib.pyplot as plt
+import pandas as pd
+
+month = {
+    "jan": 1,
+    "feb": 2,
+    "mar": 3,
+    "apr": 4,
+    "may": 5,
+    "jun": 6,
+    "jul": 7,
+    "aug": 8,
+    "sep": 9,
+    "oct": 10,
+    "nov": 11,
+    "dec": 12
+}
+
+day = {
+    "mon": 1,
+    "tue": 2,
+    "wed": 3,
+    "thu": 4,
+    "fri": 5,
+    "sat": 6,
+    "sun": 7
+}
+
+
+def passData(x, y):
+    with open('forestfires.csv') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+
+            x.append([row['X'], row['Y'], month[row['month']], day[row['day']], row['FFMC'], row['DMC'],
+                     row['DC'], row['ISI'], row['temp'], row['RH'], row['wind'], row['rain']])
+            y.append(row['area'])
+
+
+def normalize():
+    dataFrame = pd.read_csv('forestfires.csv')
 
 
 def percentage(length, fraction):
@@ -6,30 +48,56 @@ def percentage(length, fraction):
 
 
 class MultivariateRegression:
-    def __init__(self, dimensions, x, y, epoch, alpha):
-        self.dimensions = dimensions
+    def __init__(self, k, x, y, epoch, alpha):
         self.x = x
         self.y = y
         self.epoch = epoch
         self.alpha = alpha
+        self.k = k
 
     def hypothesis(self, w, b, x):
-        h = np.dot(w, x)
+        # h = np.dot(w, x)
+        h = 0
+        for i in range(len(w)):
+            h += w[i] * x[i]
         h += b
 
         return h
 
-    def derivate(self):
-        pass
+    def derivate(self, w, b, x):
+        m = len(x)
 
-    def error(self):
-        pass
+        dw = [0] * self.k
+        db = 0
+
+        for i in range(m):
+            db += (y[i] - self.hypothesis(w, b, self.x[i])) * (-1)
+
+            for j in range(self.k):
+                dw[j] += (y[i] - self.hypothesis(w, b, self.x[i])) * \
+                    (-self.x[i][j])
+
+        db /= m
+        dw /= m
+        return db, dw
+
+    def error(self, w, b, x):
+        err = 0
+        m = len(x)
+
+        for i in range(m):
+            err += y[i] - self.hypothesis(w, b, x[i])
+
+        err /= (2 * m)
+
+        return err
 
     def train(self):
-        w = [np.random.rand() for i in range(self.dimensions)]
+        w = [np.random.rand() for i in range(self.k)]
         b = np.random.rand()
 
         err = self.error(w, b, self.x)
+        errorList = []
 
         for i in range(self.epoch):
             db, dw = self.derivative(w, b, self.x)
@@ -37,83 +105,20 @@ class MultivariateRegression:
             b, w = self.update(b, db, w, dw)
 
             err = self.error(w, b, self.x)
+            errorList.append(err)
+            self.plotError(errorList)
 
     def plotError(self, errorList):
-        pass
+        plt.plot(errorList)
+        plt.show
 
 
 if __name__ == "__main__":
-    pass
 
+    x = []
+    y = []
 
-m = 4
-k = 100
+    passData(x, y)
 
-x = []
-
-for i in range(m):
-    temp = []
-    for j in range(k):
-        temp.append(np.random.normal(0, 0.))
-    x.append(temp)
-
-y = np.array([j + np.random.normal(0, 0.5) for j in range(k)])
-
-
-def derivada(var_depen, b):
-    deva = [0] * m
-    db = 0.0
-    for i in range(k):
-        sum_a = b
-        sum_b = b
-        for j in range(m):
-            sum_a = sum_a+var_depen[j]*x[j][i]
-            sum_b = sum_b+var_depen[j]*x[j][i]
-        for j in range(m):
-            deva[j] = deva[j]-((y[j]-sum_a)*x[j][i])
-        db = db-(y[i]-sum_b)
-
-    for i in range(m):
-        deva[i] = deva[i]/k
-    db = db/k
-    return deva, db
-
-
-def err(var_depen, b):
-    error = 0.0
-    for i in range(k):
-        sum_a = b
-        for j in range(m):
-            sum_a = sum_a+var_depen[j]*x[j][i]
-
-        for j in range(m):
-            error = error+(y[j]-sum_a)**2
-
-    error = error / (2 * k)
-    return error
-
-
-def train(alfa, umbral):
-    # a ind
-    # bias
-    var_depen = []
-    for i in range(m):
-        var_depen.append(np.random.rand())
-    b = np.random.rand()
-    error = err(var_depen, b)
-    print(error)
-    ciclos = 0
-    while(error > umbral and ciclos < 15):
-        deva, db = derivada(var_depen, b)
-        b = b - db * alfa
-        for i in range(m):
-            var_depen[i] = var_depen[i] - deva[i] * alfa
-        error = err(var_depen, b)
-        print("error", error)
-        ciclos += 1
-    for i in var_depen:
-        print(i)
-    # (var_depen, b)
-
-
-train(0.0005, 0.1)
+    e1 = MultivariateRegression(12, x, y, 1000, 0.01)
+    e1.train()
