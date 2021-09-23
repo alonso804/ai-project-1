@@ -43,7 +43,9 @@ def normalizeColumn(data):
 
 
 def normalize():
-    for i in range()
+    for i in range(self.k):
+        normalizeColumn()
+    pass
 
 
 def percentage(length, fraction):
