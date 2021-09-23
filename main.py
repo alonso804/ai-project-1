@@ -42,6 +42,10 @@ def normalizeColumn(data):
     return (data - np.min(data)) / (np.max(data) - np.min(data))
 
 
+def normalize():
+    for i in range()
+
+
 def percentage(length, fraction):
     return int(length * fraction / 100)
 
