@@ -1,7 +1,6 @@
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
-import pandas as pd
 
 month = {
     "jan": 1,
