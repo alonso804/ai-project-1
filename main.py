@@ -38,8 +38,8 @@ def passData(x, y):
             y.append(row['area'])
 
 
-def normalize():
-    dataFrame = pd.read_csv('forestfires.csv')
+def normalizeColumn(data):
+    return (data - np.min(data)) / (np.max(data) - np.min(data))
 
 
 def percentage(length, fraction):
