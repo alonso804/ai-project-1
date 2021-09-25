@@ -32,21 +32,14 @@ def passData(x, y):
     with open('forestfires.csv') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
+            x.append([float(row['X']), float(row['Y']), float(month[row['month']]), float(day[row['day']]), float(row['FFMC']), float(row['DMC']),
+                     float(row['DC']), float(row['ISI']), float(row['temp']), float(row['RH']), float(row['wind']), float(row['rain'])])
+            y.append(float(row['area']))
+        x = np.array(x)
+        y = np.array(y)
 
-            x.append([row['X'], row['Y'], month[row['month']], day[row['day']], row['FFMC'], row['DMC'],
-                     row['DC'], row['ISI'], row['temp'], row['RH'], row['wind'], row['rain']])
-            y.append(row['area'])
-
-
-def normalizeColumn(data):
-    return (data - np.min(data)) / (np.max(data) - np.min(data))
-
-
-def normalize():
-    for i in range(self.k):
-        normalizeColumn()
-    pass
-
+def normalize(data):
+    data = (np.amax(data) - data) / (np.amax(data) - np.amin(data))
 
 def percentage(length, fraction):
     return int(length * fraction / 100)
@@ -101,6 +94,7 @@ class MultivariateRegression:
         w = [np.random.rand() for i in range(self.k)]
         b = np.random.rand()
 
+        normalize(x)
         err = self.error(w, b, self.x)
         errorList = []
 
