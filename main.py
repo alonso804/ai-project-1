@@ -1,6 +1,7 @@
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
+from sklearn import preprocessing
 
 month = {
     "jan": 1,
@@ -28,24 +29,37 @@ day = {
 }
 
 
-def passData(x, y):
+def passData():
+    x = []
+    y = []
     with open('forestfires.csv') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
 
-            x.append([row['X'], row['Y'], month[row['month']], day[row['day']], row['FFMC'], row['DMC'],
-                     row['DC'], row['ISI'], row['temp'], row['RH'], row['wind'], row['rain']])
-            y.append(row['area'])
+            x.append(list(map(float, [row['X'], row['Y'], month[row['month']], day[row['day']], row['FFMC'], row['DMC'],
+                     row['DC'], row['ISI'], row['temp'], row['RH'], row['wind'], row['rain']])))
+            y.append(float(row['area']))
+
+    return np.array(x), np.array(y)
 
 
 def normalizeColumn(data):
-    return (data - np.min(data)) / (np.max(data) - np.min(data))
+    minimum = min(data)
+    maximum = max(data)
+    for i in range(len(data)):
+        data[i] = (float(data[i]) - minimum) / (maximum - minimum)
 
 
-def normalize():
-    for i in range(self.k):
-        normalizeColumn()
-    pass
+def normalize(x, k):
+    for i in range(k):
+        normalizeColumn(x[:, i])
+
+    # print(x)
+
+
+def normalize2(x):
+    x = preprocessing.normalize(x, norm='max', axis=0)
+    print(x)
 
 
 def percentage(length, fraction):
@@ -61,10 +75,13 @@ class MultivariateRegression:
         self.k = k
 
     def hypothesis(self, w, b, x):
-        # h = np.dot(w, x)
+        """
         h = 0
         for i in range(len(w)):
             h += w[i] * x[i]
+        """
+        h = np.dot(w, x)
+
         h += b
 
         return h
@@ -76,54 +93,67 @@ class MultivariateRegression:
         db = 0
 
         for i in range(m):
-            db += (y[i] - self.hypothesis(w, b, self.x[i])) * (-1)
+            db += (y[i] - self.hypothesis(w, b, x[i])) * (-1)
 
             for j in range(self.k):
-                dw[j] += (y[i] - self.hypothesis(w, b, self.x[i])) * \
+                dw[j] += (y[i] - self.hypothesis(w, b, x[i])) * \
                     (-self.x[i][j])
 
+            for j in range(self.k):
+                dw[j] /= m
+
         db /= m
-        dw /= m
         return db, dw
 
     def error(self, w, b, x):
         err = 0
         m = len(x)
+        # print(type(x[0]))
 
         for i in range(m):
             err += y[i] - self.hypothesis(w, b, x[i])
+            #err += y[i] - (np.dot(w, x[i]) + b)
 
         err /= (2 * m)
 
         return err
+
+    def update(self, b, db, w, dw):
+        for i in range(len(w)):
+            w[i] -= self.alpha * dw[i]
+
+        b -= self.alpha * db
+        return b, w
 
     def train(self):
         w = [np.random.rand() for i in range(self.k)]
         b = np.random.rand()
 
         err = self.error(w, b, self.x)
-        errorList = []
+        errorList = [err]
 
         for i in range(self.epoch):
-            db, dw = self.derivative(w, b, self.x)
+            db, dw = self.derivate(w, b, self.x)
 
             b, w = self.update(b, db, w, dw)
 
             err = self.error(w, b, self.x)
             errorList.append(err)
-            self.plotError(errorList)
+
+        plt.plot(errorList)
+        plt.show()
 
     def plotError(self, errorList):
         plt.plot(errorList)
-        plt.show
+        plt.show()
 
 
 if __name__ == "__main__":
 
-    x = []
-    y = []
-
-    passData(x, y)
+    x, y = passData()
+    # print(x)
+    # print()
+    normalize(x, 12)
 
     e1 = MultivariateRegression(12, x, y, 1000, 0.01)
     e1.train()
