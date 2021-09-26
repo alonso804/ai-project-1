@@ -11,11 +11,7 @@ class MultivariateRegression:
         self.k = k
 
     def hypothesis(self, w, b, x):
-        h = np.dot(w, x)
-
-        h += b
-
-        return h
+        return np.dot(w, x) + b
 
     def derivate(self, w, b, x):
         m = len(x)
@@ -69,8 +65,7 @@ class MultivariateRegression:
             err = self.error(w, b, self.x)
             errorList.append(err)
 
-        plt.plot(errorList)
-        plt.show()
+        self.plotError(errorList)
 
     def plotError(self, errorList):
         plt.plot(errorList)
