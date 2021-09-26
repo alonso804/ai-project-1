@@ -76,7 +76,6 @@ class MultivariateRegression:
         errorListTest = [errTest]
 
         for i in range(self.epoch):
-            print(i)
             db, dw = self.derivate(w, b, self.xTrain)
 
             b, w = self.update(b, db, w, dw)
@@ -85,13 +84,31 @@ class MultivariateRegression:
             errValidation = self.error(w, b, self.xValidation)
             errTest = self.error(w, b, self.xTest)
 
+            # Animation
+            """
+            plt.scatter(i, errTrain, label="Training", color="red")
+            plt.scatter(i, errValidation, label="Validation", color="green")
+            plt.scatter(i, errTest, label="Testing", color="blue")
+            plt.pause(0.0001)
+            """
+            # Print
+            """
+            print("train:", errTrain)
+            print("validation:", errValidation)
+            print("train:", errTest)
+            print()
+            """
+
             errorListTrain.append(errTrain)
             errorListValidation.append(errValidation)
             errorListTest.append(errTest)
 
-        plt.plot(errorListTrain, label="Training")
-        plt.plot(errorListValidation, label="Validation")
-        plt.plot(errorListTest, label="Testing")
+        # Graph
+        """
+        # plt.plot(errorListTrain, label="Training")
+        # plt.plot(errorListValidation, label="Validation")
+        # plt.plot(errorListTest, label="Testing")
 
         plt.legend()
+        """
         plt.show()
