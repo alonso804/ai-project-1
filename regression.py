@@ -58,25 +58,37 @@ class MultivariateRegression:
             w[i] -= self.alpha * dw[i]
 
         b -= self.alpha * db
+
         return b, w
 
     def train(self):
         w = [np.random.rand() for i in range(self.k)]
         b = np.random.rand()
 
-        err = self.error(w, b, self.x)
-        errorList = [err]
+        errTrain = self.error(w, b, self.xTrain)
+        errValidation = self.error(w, b, self.xValidation)
+
+        errorListTrain = [errTrain]
+        errorListValidation = [errValidation]
+        errorListTest = []
 
         for i in range(self.epoch):
+            print(i)
             db, dw = self.derivate(w, b, self.x)
 
             b, w = self.update(b, db, w, dw)
 
-            err = self.error(w, b, self.x)
-            errorList.append(err)
+            errTrain = self.error(w, b, self.xTrain)
+            errValidation = self.error(w, b, self.xValidation)
+            errTest = self.error(w, b, self.xTest)
 
-        self.plotError(errorList)
+            errorListTrain.append(errTrain)
+            errorListValidation.append(errValidation)
+            errorListTest.append(errTest)
 
-    def plotError(self, errorList):
-        plt.plot(errorList)
+        plt.plot(errorListTrain, label="Training")
+        plt.plot(errorListValidation, label="Validation")
+        plt.plot(errorListTest, label="Testing")
+
+        plt.legend()
         plt.show()
