@@ -21,9 +21,17 @@ def passData(fileName):
 
 def normalize(x):
     scaler = MinMaxScaler()
-    # x[:, :] = scaler.fit_transform(x)
-    x[:, [0, 1, 4, 5, 6, 7, 8, 9, 10, 11]] = scaler.fit_transform(
-        x[:, [0, 1, 4, 5, 6, 7, 8, 9, 10, 11]])
+    x[:, :] = scaler.fit_transform(x)
+    # x[:, [0, 1, 4, 5, 6, 7, 8, 9, 10, 11]] = scaler.fit_transform(
+    # x[:, [0, 1, 4, 5, 6, 7, 8, 9, 10, 11]])
+
+
+def normalizeY(y):
+    tempY = y.reshape(-1, 1)
+    # tempY = y
+    scaler = MinMaxScaler()
+    y = scaler.fit_transform(tempY)
+    return y
 
 
 def percentage(length, fraction):

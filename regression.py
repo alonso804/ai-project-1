@@ -26,20 +26,22 @@ class MultivariateRegression:
     def derivate(self, w, b, x):
         m = len(x)
 
-        dw = [0] * self.k
         db = 0
 
         for i in range(m):
-            db += (self.y[i] - self.hypothesis(w, b, x[i])) * (-1)
-
-            for j in range(self.k):
-                dw[j] += (self.y[i] - self.hypothesis(w, b, x[i])) * \
-                    (-self.x[i][j])
-
-            for j in range(self.k):
-                dw[j] /= m
+            db += (self.y[i][0] - self.hypothesis(w, b, x[i])) * (-1)
 
         db /= m
+
+        dw = [0] * self.k
+
+        for i in range(self.k):
+            for j in range(m):
+                dw[i] += (self.y[j][0] - self.hypothesis(w, b, x[j])) * \
+                    (-self.x[j][i])
+
+            dw[i] /= m
+
         return db, dw
 
     def error(self, w, b, x):
@@ -47,17 +49,17 @@ class MultivariateRegression:
         m = len(x)
 
         for i in range(m):
-            err += self.y[i] - self.hypothesis(w, b, x[i])
+            err += (self.y[i][0] - self.hypothesis(w, b, x[i])) ** 2
 
         err /= (2 * m)
 
         return err
 
     def update(self, b, db, w, dw):
-        for i in range(len(w)):
-            w[i] -= self.alpha * dw[i]
+        for i in range(self.k):
+            w[i] -= (self.alpha * dw[i])
 
-        b -= self.alpha * db
+        b -= (self.alpha * db)
 
         return b, w
 
@@ -67,14 +69,15 @@ class MultivariateRegression:
 
         errTrain = self.error(w, b, self.xTrain)
         errValidation = self.error(w, b, self.xValidation)
+        errTest = self.error(w, b, self.xTest)
 
         errorListTrain = [errTrain]
         errorListValidation = [errValidation]
-        errorListTest = []
+        errorListTest = [errTest]
 
         for i in range(self.epoch):
             print(i)
-            db, dw = self.derivate(w, b, self.x)
+            db, dw = self.derivate(w, b, self.xTrain)
 
             b, w = self.update(b, db, w, dw)
 
