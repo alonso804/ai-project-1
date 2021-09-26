@@ -1,4 +1,4 @@
-from functions import passData, normalize
+from functions import passData, normalize, shuffle
 from regression import MultivariateRegression
 
 
@@ -6,5 +6,9 @@ if __name__ == "__main__":
     x, y = passData('forestfires.csv')
     normalize(x)
 
-    e1 = MultivariateRegression(12, x, y, 1000, 0.01)
+    shuffleX, shuffleY = shuffle(x, y)
+    epoch = 1000
+    alpha = 0.01
+
+    e1 = MultivariateRegression(shuffleX, shuffleY, epoch, alpha)
     e1.train()

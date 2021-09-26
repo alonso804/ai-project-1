@@ -1,14 +1,24 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
+from functions import percentage
 
 
 class MultivariateRegression:
-    def __init__(self, k, x, y, epoch, alpha):
+    def __init__(self, x, y, epoch, alpha):
+        self.k = len(x[0])
         self.x = x
         self.y = y
         self.epoch = epoch
         self.alpha = alpha
-        self.k = k
+
+        rowsAmount = len(x)
+
+        self.xTrain = x[:percentage(rowsAmount, 70)]
+
+        self.xValidation = x[percentage(
+            rowsAmount, 70):percentage(rowsAmount, 90)]
+
+        self.xTest = x[percentage(rowsAmount, 90):]
 
     def hypothesis(self, w, b, x):
         return np.dot(w, x) + b

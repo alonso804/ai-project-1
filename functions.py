@@ -21,10 +21,15 @@ def passData(fileName):
 
 def normalize(x):
     scaler = MinMaxScaler()
-    x[:, :] = scaler.fit_transform(x)
-    # x[:, [0, 1, 4, 5, 6, 7, 8, 9, 10, 11]] = scaler.fit_transform(
-    # x[:, [0, 1, 4, 5, 6, 7, 8, 9, 10, 11]])
+    # x[:, :] = scaler.fit_transform(x)
+    x[:, [0, 1, 4, 5, 6, 7, 8, 9, 10, 11]] = scaler.fit_transform(
+        x[:, [0, 1, 4, 5, 6, 7, 8, 9, 10, 11]])
 
 
 def percentage(length, fraction):
     return int(length * fraction / 100)
+
+
+def shuffle(x, y):
+    p = np.random.permutation(len(x))
+    return x[p], y[p]
