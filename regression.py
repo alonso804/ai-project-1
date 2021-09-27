@@ -93,12 +93,12 @@ class MultivariateRegression:
             """
 
             # Print
-            """
             print("epoch:", i)
             print("train:", errTrain)
             print("validation:", errValidation)
             print("test:", errTest)
             print()
+            """
             """
 
             errorListTrain.append(errTrain)
