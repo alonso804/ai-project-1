@@ -92,11 +92,12 @@ class MultivariateRegression:
             plt.pause(0.0001)
             """
 
-            """
             # Print
+            """
+            print("epoch:", i)
             print("train:", errTrain)
             print("validation:", errValidation)
-            print("train:", errTest)
+            print("test:", errTest)
             print()
             """
 

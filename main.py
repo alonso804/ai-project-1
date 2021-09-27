@@ -14,7 +14,7 @@ if __name__ == "__main__":
     np.random.seed(0)
     shuffleX, shuffleY = shuffle(x, y)
     epoch = 3000
-    alpha = 0.001
+    alpha = 0.01
 
     e1 = MultivariateRegression(shuffleX, shuffleY, epoch, alpha)
     e1.train()
