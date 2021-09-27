@@ -65,6 +65,7 @@ class MultivariateRegression:
 
     def train(self):
         w = [np.random.rand() for i in range(self.k)]
+        print(w)
         b = np.random.rand()
 
         errTrain = self.error(w, b, self.xTrain)
@@ -91,8 +92,9 @@ class MultivariateRegression:
             plt.scatter(i, errTest, label="Testing", color="blue")
             plt.pause(0.0001)
             """
-            # Print
+
             """
+            # Print
             print("train:", errTrain)
             print("validation:", errValidation)
             print("train:", errTest)
@@ -104,11 +106,15 @@ class MultivariateRegression:
             errorListTest.append(errTest)
 
         # Graph
-        """
-        # plt.plot(errorListTrain, label="Training")
-        # plt.plot(errorListValidation, label="Validation")
-        # plt.plot(errorListTest, label="Testing")
+        plt.plot(errorListTrain, label="Training")
+        plt.plot(errorListValidation, label="Validation")
+        plt.plot(errorListTest, label="Testing")
 
         plt.legend()
+
+        """
+        ys = [self.hypothesis(w, b, xi) for xi in self.x]
+        plt.plot(self.y, '*')
+        plt.plot(ys, '*')
         """
         plt.show()

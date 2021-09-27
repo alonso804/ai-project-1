@@ -16,22 +16,14 @@ def passData(fileName):
 
             y.append(float(row['area']))
 
-    return np.array(x), np.array(y)
+    return np.array(x), np.array(y).reshape(-1, 1)
 
 
-def normalize(x):
+def normalize(data):
     scaler = MinMaxScaler()
-    x[:, :] = scaler.fit_transform(x)
-    # x[:, [0, 1, 4, 5, 6, 7, 8, 9, 10, 11]] = scaler.fit_transform(
-    # x[:, [0, 1, 4, 5, 6, 7, 8, 9, 10, 11]])
+    normalizeData = scaler.fit_transform(data)
 
-
-def normalizeY(y):
-    tempY = y.reshape(-1, 1)
-    # tempY = y
-    scaler = MinMaxScaler()
-    y = scaler.fit_transform(tempY)
-    return y
+    return normalizeData
 
 
 def percentage(length, fraction):
