@@ -5,3 +5,6 @@ Contiene las impresiones de los resultados de las gráficas, tanto del óptimo c
 
 ## Proyecto 1 - Informe
 Contiene el informe del proyecto
+
+## Correr el código
+python3 main.py
