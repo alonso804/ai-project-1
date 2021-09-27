@@ -65,7 +65,6 @@ class MultivariateRegression:
 
     def train(self):
         w = [np.random.rand() for i in range(self.k)]
-        print(w)
         b = np.random.rand()
 
         errTrain = self.error(w, b, self.xTrain)
